@@ -9,7 +9,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  schedule: '{{ $schedule }}'
+  # schedule: '{{ $schedule }}'
+  schedule: ''*/10 12-15 * * *'
   selector:
     matchLabels:
       app: {{ template "apply-for-legal-aid.name" . }}
