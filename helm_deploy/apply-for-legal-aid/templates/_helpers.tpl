@@ -81,7 +81,7 @@ In UAT and Staging, we dont run the job by scheduling it for 31st February
 */}}
 {{- define "apply-for-legal-aid.cronjob-schedule-db-backup-cleanup" -}}
   {{- if contains "-production" .Release.Namespace -}}
-    {{ "0 7 * * *"}}
+    {{ "11 7 * * *"}}
   {{- else -}}
     {{ "0 0 31 2 *" }}
   {{- end -}}
