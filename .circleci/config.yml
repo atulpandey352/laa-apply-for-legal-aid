@@ -296,7 +296,9 @@ jobs:
     - run:
         name: Delete UAT release
         command: |
+          echo '------ New ------'
           ./bin/delete_uat_releases
+          echo '------ Legacy ------'
           ./bin/delete_uat_release
 
 workflows:
