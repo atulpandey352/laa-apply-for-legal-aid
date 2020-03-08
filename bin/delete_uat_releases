@@ -6,8 +6,8 @@ KUBE_ENV_UAT_NAMESPACE=laa-apply-for-legalaid-uat
 
 OPEN_PRS=$(curl -s $REPO_URL | jq -c -r '.[] | .head.ref | gsub("[/_.]"; "-")')
 
-UAT_RELEASES=$(helm list --tiller-namespace=laa-apply-for-legalaid-uat --all --output json)
-ACTIVE_NAMESPACES=$(echo $UAT_RELEASES | jq -c -r '. | .Releases [] | select(.Name != "apply-master" ) | .Name')
+UAT_RELEASES=$(helm list --tiller-namespace=$KUBE_ENV_UAT_NAMESPACE --all --output json)
+ACTIVE_NAMESPACES=$(echo $UAT_RELEASES | jq -c -r --arg MASTER_BRANCH ${PREFIX}master '. | .Releases [] | select(.Name != "\($MASTER_BRANCH)") | .Name')
 
 function pr_has_closed() {
     TRIM_NAME=$(echo $1 | sed -En s/$PREFIX/''/p)
