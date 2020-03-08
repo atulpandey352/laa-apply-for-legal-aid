@@ -23,6 +23,6 @@ for environment in $(echo "$ACTIVE_NAMESPACES"); do
     if pr_has_closed $environment; then
       helm --tiller-namespace=$KUBE_ENV_UAT_NAMESPACE delete $environment --dry-run
     else
-      echo "PR still open, retaining the `$environment` environment"
+      echo "PR still open, retaining the $environment environment"
     fi
 done
