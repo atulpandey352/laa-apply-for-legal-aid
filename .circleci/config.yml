@@ -296,7 +296,8 @@ jobs:
     - run:
         name: Delete UAT release
         command: |
-          ./bin/delete_uat_releases.rb
+          ./bin/delete_uat_releases
+          ./bin/delete_uat_release
 
 workflows:
   version: 2
