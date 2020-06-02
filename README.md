@@ -1,5 +1,7 @@
 # LAA Apply for legal aid
 
+Snyk test no docker login details
+
 This is the service api for persisting application related information to the back end database and
 may well be used to fire requests to other services.
 
