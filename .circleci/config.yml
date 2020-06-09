@@ -176,7 +176,7 @@ jobs:
         name: Run ruby tests
         command: |
           TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings --timings-type=filename)
-          bundle exec rspec --format RspecJunitFormatter -o /tmp/test-results/rspec/rspec.xml
+          bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/test-results/rspec/rspec.xml
     - store_test_results:
         path: /tmp/test-results/rspec
 
