@@ -85,6 +85,15 @@ references:
         setup-kube-auth
         kubectl config use-context uat
 
+  yarn_for_snyk: &yarn_snyky
+    run:
+      name: Yarn for snyk installed now
+      command: |
+        curl -L "https://yarnpkg.com/install.sh" -o yarn-installer.sh
+        # Ensure the yarn installer uses the yarn.cmd executable to run yarn
+        sed -i'.bak' -e 's/yarn -/yarn.cmd -/' yarn-installer.sh
+        YARN_GPG=no bash -x yarn-installer.sh -- --version 0.27.5
+
   update_packages: &update_packages
     run:
       name: Update packages
@@ -245,7 +254,7 @@ jobs:
     - *update_packages
     - run: sudo apt-get install -y git-crypt
     - *decrypt_secrets
-    - run: sudo apt-get install -y yarn
+    - *yarn_snyky
     - run:
         name: Build docker images
         command: |
@@ -255,8 +264,7 @@ jobs:
           --build-arg APP_BRANCH=${CIRCLE_BRANCH} \
           -t app .
     - snyk/scan:
-          fail-on-issues: false
-          monitor-on-build: true
+          fail-on-issues: true
           severity-threshold: medium
     - *setup_aws_login
     - run:
