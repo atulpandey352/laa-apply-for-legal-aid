@@ -26,8 +26,8 @@ jobs:
     - name: Run rubocop
       run: bundle exec rubocop
     - name: Run erblint
-      command: bundle exec erblint
+      run: bundle exec erblint
     - name: Run Tests
       env:
         CHECK_FINANCIAL_ELIGIBILITY_HOST: ${{ secrets.CHECK_FINANCIAL_ELIGIBILITY_HOST }}
-      command: bundle exec rspec
+      run: bundle exec rspec
