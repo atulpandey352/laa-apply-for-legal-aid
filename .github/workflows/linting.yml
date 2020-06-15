@@ -1,4 +1,4 @@
-name: Rubocop
+name: Linting
 
 on: [push]
 # on:
@@ -25,3 +25,5 @@ jobs:
         bundler-cache: true
     - name: Run rubocop
       run: bundle exec rubocop
+    - name: Run erblint
+      command: bundle exec erblint
