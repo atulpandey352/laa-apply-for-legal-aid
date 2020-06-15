@@ -23,6 +23,7 @@ RSpec.describe ProceedingTypeScopeLimitationsPopulator do
 
     it 'creates an instance with correct proceeding_type_id and scope_limitation_id' do
       described_class.call
+      binding.pry if proceeding_type_scope_limitation.proceeding_type_id != expected_proceeding_type_id
       expect(proceeding_type_scope_limitation.proceeding_type_id).to eq(expected_proceeding_type_id)
       expect(proceeding_type_scope_limitation.scope_limitation_id).to eq(expected_scope_limitation_id)
     end
