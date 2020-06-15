@@ -354,7 +354,7 @@ workflows:
       - lint_checks:
           filters:
             branches:
-              ignore: master
+              only: master
       - build_and_push:
           requires:
           - lint_checks
