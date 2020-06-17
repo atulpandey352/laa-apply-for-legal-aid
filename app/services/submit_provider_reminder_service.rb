@@ -19,13 +19,12 @@ class SubmitProviderReminderService
   attr_reader :application
 
   def mailer_args
-
     [
-        application,
-        provider.name,
-        applicant.full_name,
-        application_url,
-        provider.email
+      application.application_ref,
+      provider.name,
+      applicant.full_name,
+      application_url,
+      provider.email
     ]
   end
 
