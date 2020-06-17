@@ -19,11 +19,22 @@ class SubmitProviderReminderService
   attr_reader :application
 
   def mailer_args
+
     [
-      application.id,
-      application_url
-      # 'test_url_should_go_here'
+        application,
+        provider.name,
+        applicant.full_name,
+        application_url,
+        provider.email
     ]
+  end
+
+  def applicant
+    @applicant ||= application.applicant
+  end
+
+  def provider
+    @provider ||= application.provider
   end
 
   def application_url
