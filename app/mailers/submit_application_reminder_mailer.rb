@@ -3,10 +3,8 @@ class SubmitApplicationReminderMailer < GovukNotifyRails::Mailer
   require_relative 'concerns/notify_template_methods'
   include NotifyTemplateMethods
 
-  INELIGIBLE_STATES = %w[use_ccms generating_reports submitting_assessment assessment_submitted].freeze
-
   def self.eligible_for_delivery?(scheduled_mailing)
-    !scheduled_mailing.legal_aid_application.state.in?(INELIGIBLE_STATES)
+    scheduled_mailing.legal_aid_application.provider_step == 'client_completed_means'
   end
 
   def notify_provider(application_id, name, to = support_email_address)

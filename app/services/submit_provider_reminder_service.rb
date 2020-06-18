@@ -20,20 +20,9 @@ class SubmitProviderReminderService
 
   def mailer_args
     [
-      application.application_ref,
-      provider.name,
-      applicant.full_name,
-      application_url,
-      provider.email
+      application.id,
+      application_url
     ]
-  end
-
-  def applicant
-    @applicant ||= application.applicant
-  end
-
-  def provider
-    @provider ||= application.provider
   end
 
   def application_url
