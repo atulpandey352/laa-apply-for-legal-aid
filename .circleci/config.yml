@@ -254,7 +254,6 @@ jobs:
     - *update_packages
     - run: sudo apt-get install -y git-crypt
     - *decrypt_secrets
-    - *yarn_snyky
     - run:
         name: Build docker images
         command: |

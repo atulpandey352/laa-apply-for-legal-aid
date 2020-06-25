@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "hint": "hint",
-    "test": "jest"
+    "test": "jest",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "dependencies": {
     "@hint/connector-local": "^3.2.5",
@@ -13,7 +15,8 @@
     "axios": "^0.19.2",
     "govuk-frontend": "^3.7.0",
     "jquery": "^3.5.1",
-    "js-search": "^2.0.0"
+    "js-search": "^2.0.0",
+    "snyk": "^1.348.2"
   },
   "devDependencies": {
     "@hint/configuration-web-recommended": "^6.2.2",
@@ -38,5 +41,6 @@
       "app/javascript/src",
       "app/javascript/src/modules"
     ]
-  }
+  },
+  "snyk": true
 }

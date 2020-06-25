@@ -75,8 +75,12 @@ patch:
   SNYK-JS-LODASH-567746:
     - '@hint/connector-local > @hint/utils-network > lodash':
         patched: '2020-06-09T08:52:46.900Z'
+      '@hint/utils-network > @hint/utils > lodash':
+        patched: '2020-06-25T14:25:28.819Z'
     - '@hint/utils-connector-tools > @hint/utils > lodash':
         patched: '2020-06-09T08:52:46.900Z'
+      '@hint/utils-network > lodash':
+        patched: '2020-06-25T14:25:28.819Z'
     - '@rails/webpacker > @babel/core > lodash':
         patched: '2020-06-09T08:52:46.900Z'
     - '@hint/connector-local > @hint/utils > lodash':
