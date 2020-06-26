@@ -87,12 +87,9 @@ references:
 
   yarn_for_snyk: &yarn_snyky
     run:
-      name: Yarn for snyk installed now
+      name: Yarn for snyk
       command: |
         curl -L "https://yarnpkg.com/install.sh" -o yarn-installer.sh
-        # Ensure the yarn installer uses the yarn.cmd executable to run yarn
-        sed -i'.bak' -e 's/yarn -/yarn.cmd -/' yarn-installer.sh
-        YARN_GPG=no bash -x yarn-installer.sh -- --version 0.27.5
 
   update_packages: &update_packages
     run:
@@ -263,6 +260,7 @@ jobs:
           --build-arg APP_BRANCH=${CIRCLE_BRANCH} \
           -t app .
     - snyk/scan:
+          docker-image-name: "app"
           fail-on-issues: true
           severity-threshold: medium
     - *setup_aws_login
