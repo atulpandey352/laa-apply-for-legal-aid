@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'does client use online banking requests', type: :request do
-  let(:application) { create :legal_aid_application }
+  let(:application) { create :legal_aid_application, :applicant_details_checked }
   let(:application_id) { application.id }
   let(:provider) { application.provider }
 

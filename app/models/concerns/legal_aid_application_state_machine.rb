@@ -20,15 +20,16 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       state :checking_applicant_details # rename of checking_client_details_answers
       state :applicant_details_checked # rename of client_details_answers_checked
       state :provider_entering_means # rename of most of client_details_answers_checked
+      state :provider_confirming_applicant_eligibility
 
       # state :checking_client_details_answers # renamed to checking_applicant_details
-      # state :client_details_answers_checked # renamed to applicant_details_checked
+      # state :client_details_answers_checked # renamed to applicant_details_checked / provider_confirming_applicant_eligibility
       state :delegated_functions_used
       state :provider_submitted
       state :checking_citizen_answers
       state :checking_passported_answers
       state :analysing_bank_transactions
-      # state :provider_assessing_means # replaced by provider_assessing_merits
+      state :provider_assessing_means
       state :provider_assessing_merits
       state :provider_checking_citizens_means_answers
       state :provider_checked_citizens_means_answers
@@ -39,8 +40,11 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       state :use_ccms
 
       event :enter_applicant_details do
-        transitions from: %i[initiated
-                             provider_entering_means],
+        transitions from: %i[
+          initiated
+          applicant_details_checked
+          provider_entering_means
+        ],
                     to: :entering_applicant_details
         #
         #
@@ -50,14 +54,19 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
 
       event :check_applicant_details do
         transitions from: %i[entering_applicant_details
-                             applicant_details_checked],
+                             applicant_details_checked
+                             use_ccms],
                     to: :checking_applicant_details
         # transitions from: :entering_applicant_details, to: :checking_applicant_details
         # transitions from: :applicant_details_checked, to: :checking_applicant_details
       end
 
       event :applicant_details_checked do
-        transitions from: :checking_applicant_details, to: :applicant_details_checked,
+        transitions from: %i[
+          checking_applicant_details
+          provider_confirming_applicant_eligibility
+        ],
+                    to: :applicant_details_checked,
                     after: -> { CleanupCapitalAttributes.call(self) }
       end
 
@@ -84,11 +93,12 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       end
 
       event :provider_submit do
-        transitions from: :initiated, to: :provider_submitted
-        transitions from: :entering_applicant_details, to: :provider_submitted # this will be removed eventually
-        transitions from: :checking_applicant_details, to: :provider_submitted
-        transitions from: :applicant_details_checked, to: :provider_submitted
-        transitions from: :delegated_functions_used, to: :provider_submitted
+        transitions from: :provider_confirming_applicant_eligibility, to: :provider_submitted
+        # transitions from: :initiated, to: :provider_submitted
+        # transitions from: :entering_applicant_details, to: :provider_submitted # this will be removed eventually
+        # transitions from: :checking_applicant_details, to: :provider_submitted
+        # transitions from: :applicant_details_checked, to: :provider_submitted
+        # transitions from: :delegated_functions_used, to: :provider_submitted
         transitions from: :use_ccms, to: :provider_submitted
       end
 
@@ -138,6 +148,10 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
 
       event :provider_checked_citizens_means_answers do
         transitions from: :provider_checking_citizens_means_answers, to: :provider_checked_citizens_means_answers
+      end
+
+      event :provider_confirm_applicant_eligiibility do
+        transitions from: :applicant_details_checked, to: :provider_confirming_applicant_eligibility
       end
 
       event :check_merits_answers do

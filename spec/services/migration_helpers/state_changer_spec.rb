@@ -29,9 +29,9 @@ module MigrationHelpers
           expect_state_changed(:client_details_answers_checked_check_benefits, :applicant_details_checked)
           expect_state_changed(:client_details_answers_checked_capital_introductions, :provider_entering_means)
           expect_state_changed(:client_details_answers_checked_own_homes, :provider_entering_means)
-          expect_state_changed(:client_details_answers_checked_open_banking_consents, :client_details_answers_checked)
-          expect_state_changed(:client_details_answers_checked_email_addresses, :client_details_answers_checked)
-          expect_state_changed(:client_details_answers_checked_about_the_financial_assessments, :client_details_answers_checked)
+          expect_state_changed(:client_details_answers_checked_open_banking_consents, :provider_confirming_applicant_eligibility)
+          expect_state_changed(:client_details_answers_checked_email_addresses, :provider_confirming_applicant_eligibility)
+          expect_state_changed(:client_details_answers_checked_about_the_financial_assessments, :provider_confirming_applicant_eligibility)
           expect_state_changed(:provider_assessing_means, :provider_assessing_merits)
         end
       end
@@ -104,6 +104,7 @@ module MigrationHelpers
         %(UPDATE legal_aid_applications SET state = 'checking_applicant_details' WHERE state = 'checking_client_details_answers' ),
         %(UPDATE legal_aid_applications SET state = 'applicant_details_checked' WHERE state = 'client_details_answers_checked'  AND provider_step = 'check_benefits'),
         %|UPDATE legal_aid_applications SET state = 'provider_entering_means' WHERE state = 'client_details_answers_checked'  AND provider_step not in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|,
+        %|UPDATE legal_aid_applications SET state = 'provider_confirming_applicant_eligibility' WHERE state = 'client_details_answers_checked'  AND provider_step in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|,
         %(UPDATE legal_aid_applications SET state = 'provider_assessing_merits' WHERE state = 'provider_assessing_means' )
       ]
     end
