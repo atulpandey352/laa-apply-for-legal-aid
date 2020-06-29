@@ -5,7 +5,7 @@ class TestApplicationCreationService
     at_checking_passported_answers
     at_applicant_details_checked
     at_provider_submitted
-    at_provider_assessing_means
+    at_provider_assessing_merits
     at_checking_merits_answers
   ].freeze
 

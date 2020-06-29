@@ -43,8 +43,8 @@ FactoryBot.define do
       state { 'provider_checking_citizens_means_answers' }
     end
 
-    trait :provider_assessing_means do
-      state { 'provider_assessing_means' }
+    trait :provider_assessing_merits do
+      state { 'provider_assessing_merits' }
     end
 
     trait :with_irregular_income do
@@ -310,21 +310,21 @@ FactoryBot.define do
       provider_step { :check_provider_answers }
     end
 
-    trait :at_provider_assessing_means do
+    trait :at_provider_assessing_merits do
       with_proceeding_types
-      state { :provider_assessing_means }
+      state { :provider_assessing_merits }
       provider_step { :start_merits_assessments }
     end
 
     trait :at_client_completed_means do
       with_proceeding_types
-      state { :provider_assessing_means }
+      state { :provider_assessing_merits }
       provider_step { :client_completed_means }
     end
 
     trait :at_income_summary do
       with_proceeding_types
-      state { :provider_assessing_means }
+      state { :provider_assessing_merits }
       provider_step { :income_summary }
     end
 

@@ -106,7 +106,7 @@ Given('I start the journey as far as the client completed means page') do
     :with_applicant,
     :with_everything,
     :with_vehicle,
-    :provider_assessing_means
+    :provider_assessing_merits
   )
   login_as @legal_aid_application.provider
   visit(providers_legal_aid_application_client_completed_means_path(@legal_aid_application))
@@ -118,7 +118,7 @@ Given("I am checking the applicant's means answers") do
     :with_applicant,
     :with_everything,
     :with_vehicle,
-    :provider_assessing_means
+    :provider_assessing_merits
   )
   login_as @legal_aid_application.provider
   visit(providers_legal_aid_application_means_summary_path(@legal_aid_application))
@@ -129,7 +129,7 @@ Given('I start the merits application') do
     :application,
     :with_applicant,
     :with_proceeding_types,
-    :provider_assessing_means
+    :provider_assessing_merits
   )
   login_as @legal_aid_application.provider
   visit Flow::KeyPoint.path_for(
@@ -144,7 +144,7 @@ Given('I start the merits application with brank transactions with no transactio
     :application,
     :with_applicant,
     :with_proceeding_types,
-    :provider_assessing_means,
+    :provider_assessing_merits,
     :with_uncategorised_credit_transactions,
     :with_uncategorised_debit_transactions
   )
@@ -162,7 +162,7 @@ Given('I start the merits application and the applicant has uploaded transaction
     :application,
     :with_applicant,
     :with_proceeding_types,
-    :provider_assessing_means,
+    :provider_assessing_merits,
     :with_transaction_period,
     :with_benefits_transactions
   )
@@ -317,7 +317,7 @@ Given('The means questions have been answered by the applicant') do
     :application,
     :with_applicant,
     :with_proceeding_types,
-    :provider_assessing_means,
+    :provider_assessing_merits,
     :with_uncategorised_debit_transactions
   )
   login_as @legal_aid_application.provider

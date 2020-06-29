@@ -196,8 +196,8 @@ RSpec.describe 'check passported answers requests', type: :request do
           expect(response).to redirect_to flow_forward_path
         end
 
-        it 'transitions to provider_assessing_means state' do
-          expect(application.reload.provider_assessing_means?).to be true
+        it 'transitions to provider_assessing_merits state' do
+          expect(application.reload.provider_assessing_merits?).to be true
         end
 
         context 'Form submitted using Save as draft button' do
@@ -256,7 +256,7 @@ RSpec.describe 'check passported answers requests', type: :request do
         subject
       end
 
-      it 'transitions to provider_assessing_means state' do
+      it 'transitions to provider_assessing_merits state' do
         expect(application.reload.applicant_details_checked?).to be true
       end
 

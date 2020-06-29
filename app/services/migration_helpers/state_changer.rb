@@ -1,10 +1,12 @@
+# rubocop:disable Layout/LineLength
 module MigrationHelpers
   class StateChanger
     STATE_CHANGES = [
       [:initiated, :entering_applicant_details, %(provider_step != 'address_lookups')],
       [:checking_client_details_answers, :checking_applicant_details, nil],
       [:client_details_answers_checked, :applicant_details_checked, %(provider_step = 'check_benefits')],
-      [:client_details_answers_checked, :provider_entering_means, %|provider_step not in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|]
+      [:client_details_answers_checked, :provider_entering_means, %|provider_step not in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|],
+      [:provider_assessing_means, :provider_assessing_merits, nil]
     ].freeze
 
     def initialize(dummy_run:)
@@ -50,3 +52,4 @@ module MigrationHelpers
     end
   end
 end
+# rubocop:enable Layout/LineLength

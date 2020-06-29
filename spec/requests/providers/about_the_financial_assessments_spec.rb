@@ -40,7 +40,7 @@ RSpec.describe 'about financial assessments requests', type: :request do
             :legal_aid_application,
             :with_proceeding_types,
             :with_applicant_and_address,
-            state: :provider_assessing_means
+            state: :provider_assessing_merits
           )
         end
         let(:target_path) do

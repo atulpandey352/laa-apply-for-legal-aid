@@ -17,7 +17,7 @@ RSpec.describe Providers::MeansSummariesController, type: :request do
            applicant: applicant,
            provider: provider,
            transaction_types: [transaction_type],
-           state: :provider_assessing_means
+           state: :provider_assessing_merits
   end
   let(:login) { login_as provider }
 
