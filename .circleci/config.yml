@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@3.4.2
-  snyk: snyk/snyk@0.0.8
+  snyk: snyk/snyk@0.0.10
 
 executors:
   basic-executor:
