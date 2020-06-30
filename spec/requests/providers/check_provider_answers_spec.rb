@@ -99,7 +99,7 @@ RSpec.describe 'check your answers requests', type: :request do
 
       context 'when the application is in provider submitted state' do
         before do
-          application.provider_submit!
+          application.update!(state: 'provider_submitted')
           get providers_legal_aid_application_check_provider_answers_path(application)
         end
 

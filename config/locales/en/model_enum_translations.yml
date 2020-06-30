@@ -30,6 +30,7 @@ en:
         provider_entering_means: In progress
         assessment_submitted: Application submitted
         provider_submitted: Submitted by provider
+        provider_assessing_means: In progress
         provider_checking_citizens_means_answers: Means test completed
         provider_checked_citizens_means_answers: Means test completed
         provider_confirming_applicant_eligibility: In progress

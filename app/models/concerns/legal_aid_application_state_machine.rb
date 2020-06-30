@@ -1,4 +1,5 @@
-module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
+# rubocop:disable Layout/FirstArrayElementIndentation
+module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength Layout/ArrayAlignment
   extend ActiveSupport::Concern
 
   included do # rubocop:disable Metrics/BlockLength
@@ -41,10 +42,11 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
 
       event :enter_applicant_details do
         transitions from: %i[
-          initiated
-          applicant_details_checked
-          provider_entering_means
-        ],
+                              initiated
+                              applicant_details_checked
+                              provider_entering_means
+                              checking_applicant_details
+                            ],
                     to: :entering_applicant_details
         #
         #
@@ -53,9 +55,11 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       end
 
       event :check_applicant_details do
-        transitions from: %i[entering_applicant_details
-                             applicant_details_checked
-                             use_ccms],
+        transitions from: %i[
+                              entering_applicant_details
+                              applicant_details_checked
+                              use_ccms
+                            ],
                     to: :checking_applicant_details
         # transitions from: :entering_applicant_details, to: :checking_applicant_details
         # transitions from: :applicant_details_checked, to: :checking_applicant_details
@@ -63,16 +67,18 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
 
       event :applicant_details_checked do
         transitions from: %i[
-          checking_applicant_details
-          provider_confirming_applicant_eligibility
-        ],
+                              checking_applicant_details
+                              provider_confirming_applicant_eligibility
+                            ],
                     to: :applicant_details_checked,
                     after: -> { CleanupCapitalAttributes.call(self) }
       end
 
       event :provider_enter_means do
-        transitions from: %i[applicant_details_checked
-                             delegated_functions_used],
+        transitions from: %i[
+                              applicant_details_checked
+                              delegated_functions_used
+                            ],
                     to: :provider_entering_means
         # transitions from: :applicant_details_checked, to: :provider_entering_means
         # transitions from: :delegated_functions_used, to: :provider_entering_means
@@ -93,13 +99,16 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       end
 
       event :provider_submit do
-        transitions from: :provider_confirming_applicant_eligibility, to: :provider_submitted
+        transitions from: %i[
+                              provider_confirming_applicant_eligibility
+                              use_ccms
+                            ],
+                    to: :provider_submitted
         # transitions from: :initiated, to: :provider_submitted
         # transitions from: :entering_applicant_details, to: :provider_submitted # this will be removed eventually
         # transitions from: :checking_applicant_details, to: :provider_submitted
         # transitions from: :applicant_details_checked, to: :provider_submitted
         # transitions from: :delegated_functions_used, to: :provider_submitted
-        transitions from: :use_ccms, to: :provider_submitted
       end
 
       event :use_ccms do
@@ -107,6 +116,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
         transitions from: :applicant_details_checked, to: :use_ccms
         transitions from: :provider_submitted, to: :use_ccms
         transitions from: :delegated_functions_used, to: :use_ccms
+        transitions from: :provider_confirming_applicant_eligibility, to: :use_ccms
       end
 
       event :reset do
@@ -151,7 +161,11 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       end
 
       event :provider_confirm_applicant_eligiibility do
-        transitions from: :applicant_details_checked, to: :provider_confirming_applicant_eligibility
+        transitions from: %i[
+                              applicant_details_checked
+                              delegated_functions_used
+                            ],
+                    to: :provider_confirming_applicant_eligibility
       end
 
       event :check_merits_answers do
@@ -183,8 +197,9 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength
       end
 
       event :reset_from_use_ccms do
-        transitions from: :use_ccms, to: :initiated
+        transitions from: :use_ccms, to: :applicant_details_checked
       end
     end
   end
 end
+# rubocop:enable Layout/FirstArrayElementIndentation

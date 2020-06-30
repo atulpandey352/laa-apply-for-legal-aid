@@ -65,6 +65,7 @@ module MigrationHelpers
       end
 
       it 'does not change the records' do
+        allow($stdout).to receive(:puts)
         StateChanger.new(dummy_run: true).up
         expect_state_not_to_have_changed(:initiated_address_lookups)
         expect_state_not_to_have_changed(:initiated_address_selections)

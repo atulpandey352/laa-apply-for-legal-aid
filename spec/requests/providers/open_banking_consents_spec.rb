@@ -29,8 +29,8 @@ RSpec.describe 'does client use online banking requests', type: :request do
 
       context 'the application is in use_ccms state' do
         let(:application) { create :legal_aid_application, state: 'use_ccms' }
-        it 'resets the state to initiated' do
-          expect(application.reload.state).to eq 'initiated'
+        it 'resets the state to provider_confirming_applicant_eligibility' do
+          expect(application.reload.state).to eq 'provider_confirming_applicant_eligibility'
         end
       end
     end
