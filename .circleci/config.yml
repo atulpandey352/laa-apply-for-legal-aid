@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@3.4.2
-  snyk: snyk/snyk@0.0.10
+  snyk: snyk/snyk@1.352.1
 
 executors:
   basic-executor:
@@ -84,12 +84,6 @@ references:
         $(aws ecr get-login --region eu-west-2 --no-include-email)
         setup-kube-auth
         kubectl config use-context uat
-
-  yarn_for_snyk: &yarn_snyky
-    run:
-      name: Yarn for snyk
-      command: |
-        curl -L "https://yarnpkg.com/install.sh" -o yarn-installer.sh
 
   update_packages: &update_packages
     run:
