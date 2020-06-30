@@ -164,6 +164,9 @@ jobs:
     - run:
         name: Run erblint
         command: bin/rails erblint
+    - run:
+        name: Snyk vulnerability scanning
+        command: snyk/scan
 
   unit_tests:
     executor: test-executor
