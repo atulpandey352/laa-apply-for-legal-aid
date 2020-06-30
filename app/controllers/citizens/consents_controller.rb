@@ -18,7 +18,7 @@ module Citizens
 
     def change_application_state
       if @form.open_banking_consent == 'true'
-        legal_aid_application.provider_submit! unless legal_aid_application.provider_submitted?
+        # legal_aid_application.provider_submit! unless legal_aid_application.provider_submitted?
       else
         legal_aid_application.use_ccms! unless legal_aid_application.use_ccms?
       end

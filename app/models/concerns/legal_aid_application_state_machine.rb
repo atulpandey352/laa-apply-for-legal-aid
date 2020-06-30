@@ -26,12 +26,15 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       # state :checking_client_details_answers # renamed to checking_applicant_details
       # state :client_details_answers_checked # renamed to applicant_details_checked / provider_confirming_applicant_eligibility
       state :delegated_functions_used
-      state :provider_submitted
+      # state :provider_submitted # replaced by awaiting_applicant and applicant_entering_means
+      state :awaiting_applicant
+      state :applicant_entering_means
       state :checking_citizen_answers
       state :checking_passported_answers
       state :analysing_bank_transactions
       state :provider_assessing_means
-      state :provider_assessing_merits
+      # state :provider_assessing_merits
+      state :provider_entering_merits
       state :provider_checking_citizens_means_answers
       state :provider_checked_citizens_means_answers
       state :checking_merits_answers
@@ -78,6 +81,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: %i[
                               applicant_details_checked
                               delegated_functions_used
+                              use_ccms
                             ],
                     to: :provider_entering_means
         # transitions from: :applicant_details_checked, to: :provider_entering_means
@@ -95,7 +99,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: :delegated_functions_used, to: :checking_passported_answers
         transitions from: :applicant_details_checked, to: :checking_passported_answers
         # transitions from: :provider_assessing_means, to: :checking_passported_answers # replaced by the line below
-        transitions from: :provider_assessing_merits, to: :checking_passported_answers
+        # transitions from: :provider_assessing_merits, to: :checking_passported_answers
       end
 
       event :provider_submit do
@@ -117,22 +121,41 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: :provider_submitted, to: :use_ccms
         transitions from: :delegated_functions_used, to: :use_ccms
         transitions from: :provider_confirming_applicant_eligibility, to: :use_ccms
+        transitions from: :applicant_entering_means, to: :use_ccms
+      end
+
+      event :await_applicant do
+        transitions from: %i[
+                              provider_confirming_applicant_eligibility
+                              use_ccms
+                             ],
+                    to: :awaiting_applicant
+      end
+
+      event :applicant_enter_means do
+        transitions from: %i[
+                              awaiting_applicant
+                              applicant_entering_means
+                              use_ccms
+                            ],
+                    to: :applicant_entering_means
       end
 
       event :reset do
         transitions from: :checking_applicant_details, to: :entering_applicant_details
-        transitions from: :checking_citizen_answers, to: :provider_submitted
+        transitions from: :checking_citizen_answers, to: :applicant_entering_means
         transitions from: :checking_passported_answers, to: :applicant_details_checked
         # transitions from: :checking_merits_answers, to: :provider_assessing_means # replaced by the line below
-        transitions from: :checking_merits_answers, to: :provider_assessing_merits
+        transitions from: :checking_merits_answers, to: :provider_entering_merits
         # transitions from: :provider_assessing_means, to: :checking_citizen_answers # replaced by the line below
-        transitions from: :provider_assessing_merits, to: :checking_citizen_answers
+        # transitions from: :provider_assessing_merits, to: :checking_citizen_answers
       end
 
       event :check_citizen_answers do
-        transitions from: :provider_submitted, to: :checking_citizen_answers
+        # transitions from: :provider_submitted, to: :checking_citizen_answers
         # transitions from: :provider_assessing_means, to: :checking_citizen_answers # replaced by the line below
-        transitions from: :provider_assessing_merits, to: :checking_citizen_answers
+        # transitions from: :provider_assessing_merits, to: :checking_citizen_answers
+        transitions from: :applicant_entering_means, to: :checking_citizen_answers
       end
 
       event :complete_means do
@@ -142,17 +165,17 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                       BankTransactionsAnalyserJob.perform_later(self)
                     end
         # transitions from: :checking_passported_answers, to: :provider_assessing_means # replaced by the line below
-        transitions from: :checking_passported_answers, to: :provider_assessing_merits
+        transitions from: :checking_passported_answers, to: :provider_assessing_means
       end
 
       event :complete_bank_transaction_analysis do
         # transitions from: :analysing_bank_transactions, to: :provider_assessing_means # replaced by the line below
-        transitions from: :analysing_bank_transactions, to: :provider_assessing_merits
+        transitions from: :analysing_bank_transactions, to: :provider_assessing_means
       end
 
       event :provider_check_citizens_means_answers do
         # transitions from: :provider_assessing_means, to: :provider_checking_citizens_means_answers # replaced by the line below
-        transitions from: :provider_assessing_merits, to: :provider_checking_citizens_means_answers
+        transitions from: :provider_assessing_means, to: :provider_checking_citizens_means_answers
         transitions from: :provider_checked_citizens_means_answers, to: :provider_checking_citizens_means_answers
       end
 
@@ -172,7 +195,8 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: :provider_checked_citizens_means_answers, to: :checking_merits_answers
         transitions from: :checked_merits_answers, to: :checking_merits_answers
         # transitions from: :provider_assessing_means, to: :checking_merits_answers # replaced by the line below
-        transitions from: :provider_assessing_merits, to: :checking_merits_answers
+        # transitions from: :provider_assessing_merits, to: :checking_merits_answers
+        transitions from: :provider_entering_merits, to: :checking_merits_answers
         transitions from: :submitting_assessment, to: :checking_merits_answers
         transitions from: :assessment_submitted, to: :checking_merits_answers
       end

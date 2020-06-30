@@ -92,7 +92,7 @@ RSpec.describe 'about financial assessments requests', type: :request do
         end
 
         context 'but has already been submitted by the provider' do
-          let(:application) { create(:legal_aid_application, :with_applicant, :provider_submitted) }
+          let(:application) { create(:legal_aid_application, :with_applicant, :awaiting_applicant) }
 
           it 'does not send an email to the citizen' do
             expect(CitizenEmailService).not_to receive(:new)
@@ -108,7 +108,7 @@ RSpec.describe 'about financial assessments requests', type: :request do
         it 'changes the application state to "provider_submitted"' do
           expect { subject }
             .to change { application.reload.state }
-            .from('provider_confirming_applicant_eligibility').to('provider_submitted')
+            .from('provider_confirming_applicant_eligibility').to('awaiting_applicant')
         end
 
         it 'sends an e-mail to the citizen' do

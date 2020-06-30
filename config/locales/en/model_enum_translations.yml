@@ -17,6 +17,8 @@ en:
     legal_aid_application:
       state:
         applicant_details_checked: Answers checked
+        applicant_entering_means: Submitted by provider
+        awaiting_applicant: Submitted by provider
         checking_applicant_details: Checking answers
         checking_citizen_answers: Applicant checking answers
         checking_merits_answers: Provider checking merits test answers
@@ -28,6 +30,7 @@ en:
         analysing_bank_transactions: Analysing Bank Transactions
         provider_assessing_merits: Means test completed
         provider_entering_means: In progress
+        provider_entering_merits: In progress
         assessment_submitted: Application submitted
         provider_submitted: Submitted by provider
         provider_assessing_means: In progress

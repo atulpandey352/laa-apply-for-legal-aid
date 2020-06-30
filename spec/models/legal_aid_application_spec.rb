@@ -359,7 +359,7 @@ RSpec.describe LegalAidApplication, type: :model do
     end
 
     context 'provider submitted' do
-      let(:legal_aid_application) { create :legal_aid_application, :provider_submitted }
+      let(:legal_aid_application) { create :legal_aid_application, :applicant_entering_means }
       it 'returns true' do
         expect(legal_aid_application.read_only?).to be(true)
       end

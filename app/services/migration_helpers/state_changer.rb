@@ -7,7 +7,8 @@ module MigrationHelpers
       [:client_details_answers_checked, :applicant_details_checked, %(provider_step = 'check_benefits')],
       [:client_details_answers_checked, :provider_entering_means, %|provider_step not in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|],
       [:client_details_answers_checked, :provider_confirming_applicant_eligibility, %|provider_step in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|],
-      [:provider_assessing_means, :provider_assessing_merits, nil]
+      [:provider_assessing_means, :provider_entering_merits, nil],
+      [:provider_submitted, :applicant_entering_means, nil]
     ].freeze
 
     def initialize(dummy_run:)

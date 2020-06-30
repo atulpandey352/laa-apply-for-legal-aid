@@ -23,12 +23,16 @@ FactoryBot.define do
       applicant { build :applicant, :with_address_lookup }
     end
 
-    trait :provider_submitted do
-      state { 'provider_submitted' }
+    trait :applicant_entering_means do
+      state { 'applicant_entering_means' }
     end
 
     trait :use_ccms do
       state { 'use_ccms' }
+    end
+
+    trait :awaiting_applicant do
+      state { 'awaiting_applicant' }
     end
 
     trait :applicant_details_checked do
@@ -43,8 +47,12 @@ FactoryBot.define do
       state { 'provider_checking_citizens_means_answers' }
     end
 
-    trait :provider_assessing_merits do
-      state { 'provider_assessing_merits' }
+    trait :provider_assessing_means do
+      state { 'provider_assessing_means' }
+    end
+
+    trait :provider_entering_merits do
+      state { 'provider_entering_merits' }
     end
 
     trait :with_irregular_income do
@@ -198,7 +206,7 @@ FactoryBot.define do
 
     trait :with_everything do
       with_applicant
-      provider_submitted
+      applicant_entering_means
       with_savings_amount
       with_other_assets_declaration
       with_own_home_mortgaged
@@ -221,7 +229,7 @@ FactoryBot.define do
 
     trait :with_everything_and_address do
       with_applicant_and_address
-      provider_submitted
+      applicant_entering_means
       with_savings_amount
       with_other_assets_declaration
       with_own_home_mortgaged
@@ -318,7 +326,7 @@ FactoryBot.define do
 
     trait :at_client_completed_means do
       with_proceeding_types
-      state { :provider_assessing_merits }
+      state { :provider_assessing_means }
       provider_step { :client_completed_means }
     end
 

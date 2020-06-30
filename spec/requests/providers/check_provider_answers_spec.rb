@@ -97,9 +97,9 @@ RSpec.describe 'check your answers requests', type: :request do
         end
       end
 
-      context 'when the application is in provider submitted state' do
+      context 'when the application is in applicant_entering_means state' do
         before do
-          application.update!(state: 'provider_submitted')
+          application.update!(state: 'applicant_entering_means')
           get providers_legal_aid_application_check_provider_answers_path(application)
         end
 
@@ -143,7 +143,7 @@ RSpec.describe 'check your answers requests', type: :request do
       end
 
       context 'when client has completed their journey' do
-        let(:application) { create(:legal_aid_application, :with_proceeding_types, :with_applicant_and_address, :provider_assessing_merits) }
+        let(:application) { create(:legal_aid_application, :with_proceeding_types, :with_applicant_and_address, :provider_assessing_means) }
         it 'redirects to means summary' do
           expect(response).to redirect_to(providers_legal_aid_application_means_summary_path(application))
         end

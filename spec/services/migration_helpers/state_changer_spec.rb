@@ -15,6 +15,7 @@ module MigrationHelpers
     let!(:client_details_answers_checked_email_addresses) { create_app(:client_details_answers_checked, :email_addresses) }
     let!(:client_details_answers_checked_about_the_financial_assessments) { create_app(:client_details_answers_checked, :about_the_financial_assessments) }
     let!(:provider_assessing_means) { create_app(:provider_assessing_means, nil) }
+    let!(:provider_submitted) { create_app(:provider_submitted, nil) }
 
     context 'not a dummy run' do
       describe '#up' do
@@ -32,7 +33,8 @@ module MigrationHelpers
           expect_state_changed(:client_details_answers_checked_open_banking_consents, :provider_confirming_applicant_eligibility)
           expect_state_changed(:client_details_answers_checked_email_addresses, :provider_confirming_applicant_eligibility)
           expect_state_changed(:client_details_answers_checked_about_the_financial_assessments, :provider_confirming_applicant_eligibility)
-          expect_state_changed(:provider_assessing_means, :provider_assessing_merits)
+          expect_state_changed(:provider_assessing_means, :provider_entering_merits)
+          expect_state_changed(:provider_submitted, :applicant_entering_means)
         end
       end
 
@@ -52,6 +54,7 @@ module MigrationHelpers
           expect_state_changed(:client_details_answers_checked_open_banking_consents, :client_details_answers_checked)
           expect_state_changed(:client_details_answers_checked_email_addresses, :client_details_answers_checked)
           expect_state_changed(:client_details_answers_checked_about_the_financial_assessments, :client_details_answers_checked)
+          expect_state_changed(:provider_submitted, :provider_submitted)
         end
       end
     end
@@ -79,6 +82,7 @@ module MigrationHelpers
         expect_state_not_to_have_changed(:client_details_answers_checked_open_banking_consents)
         expect_state_not_to_have_changed(:client_details_answers_checked_email_addresses)
         expect_state_not_to_have_changed(:client_details_answers_checked_about_the_financial_assessments)
+        expect_state_not_to_have_changed(:provider_submitted)
       end
     end
 
@@ -106,7 +110,8 @@ module MigrationHelpers
         %(UPDATE legal_aid_applications SET state = 'applicant_details_checked' WHERE state = 'client_details_answers_checked'  AND provider_step = 'check_benefits'),
         %|UPDATE legal_aid_applications SET state = 'provider_entering_means' WHERE state = 'client_details_answers_checked'  AND provider_step not in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|,
         %|UPDATE legal_aid_applications SET state = 'provider_confirming_applicant_eligibility' WHERE state = 'client_details_answers_checked'  AND provider_step in ('check_benefits', 'open_banking_consents', 'email_addresses', 'about_the_financial_assessments')|,
-        %(UPDATE legal_aid_applications SET state = 'provider_assessing_merits' WHERE state = 'provider_assessing_means' )
+        %(UPDATE legal_aid_applications SET state = 'provider_entering_merits' WHERE state = 'provider_assessing_means' ),
+        %(UPDATE legal_aid_applications SET state = 'applicant_entering_means' WHERE state = 'provider_submitted' )
       ]
     end
     # rubocop:enable Layout/LineLength

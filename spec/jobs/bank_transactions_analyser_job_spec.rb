@@ -13,7 +13,7 @@ RSpec.describe BankTransactionsAnalyserJob, type: :job do
     it 'updates the state' do
       allow(StateBenefitAnalyserService).to receive(:call).with(legal_aid_application)
       subject
-      expect(legal_aid_application.reload.state).to eq('provider_assessing_merits')
+      expect(legal_aid_application.reload.state).to eq('provider_assessing_means')
     end
   end
 end

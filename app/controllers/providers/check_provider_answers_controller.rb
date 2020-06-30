@@ -1,7 +1,7 @@
 module Providers
   class CheckProviderAnswersController < ProviderBaseController
     def index
-      return redirect_to_means_summary if legal_aid_application.provider_assessing_merits?
+      return redirect_to_means_summary if legal_aid_application.provider_assessing_means?
 
       set_variables
       legal_aid_application.check_applicant_details! unless status_change_not_required?
@@ -33,7 +33,7 @@ module Providers
 
     def status_change_not_required?
       legal_aid_application.checking_applicant_details? ||
-        legal_aid_application.provider_submitted? ||
+        legal_aid_application.applicant_entering_means? ||
         legal_aid_application.checking_citizen_answers?
     end
   end

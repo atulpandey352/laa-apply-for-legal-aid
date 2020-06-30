@@ -4,8 +4,9 @@ class TestApplicationCreationService
     at_checking_applicant_details
     at_checking_passported_answers
     at_applicant_details_checked
-    at_provider_submitted
-    at_provider_assessing_merits
+    awaiting_applicant
+    applicant_entering_means
+    provider_entering_merits
     at_checking_merits_answers
   ].freeze
 

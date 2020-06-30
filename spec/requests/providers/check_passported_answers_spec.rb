@@ -84,7 +84,7 @@ RSpec.describe 'check passported answers requests', type: :request do
       end
 
       context 'applicant does not have any capital' do
-        let(:application) { create :legal_aid_application, :provider_submitted, :with_applicant, :without_own_home, :applicant_details_checked }
+        let(:application) { create :legal_aid_application, :with_applicant, :without_own_home, state: 'provider_entering_means' }
         it 'does not display capital restrictions' do
           expect(response.body).not_to include('restrictions')
         end
@@ -196,8 +196,8 @@ RSpec.describe 'check passported answers requests', type: :request do
           expect(response).to redirect_to flow_forward_path
         end
 
-        it 'transitions to provider_assessing_merits state' do
-          expect(application.reload.provider_assessing_merits?).to be true
+        it 'transitions to provider_entering_merits state' do
+          expect(application.reload.provider_assessing_means?).to be true
         end
 
         context 'Form submitted using Save as draft button' do
