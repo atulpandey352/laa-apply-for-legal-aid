@@ -16,31 +16,25 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
     end
 
     aasm column: :state do # rubocop:disable Metrics/BlockLength
-      state :initiated, initial: true
-      state :entering_applicant_details # new state between initiated and checking_applicant_detils/checking_client_details_answers
-      state :checking_applicant_details # rename of checking_client_details_answers
-      state :applicant_details_checked # rename of client_details_answers_checked
-      state :provider_entering_means # rename of most of client_details_answers_checked
-      state :provider_confirming_applicant_eligibility
-
-      # state :checking_client_details_answers # renamed to checking_applicant_details
-      # state :client_details_answers_checked # renamed to applicant_details_checked / provider_confirming_applicant_eligibility
-      state :delegated_functions_used
-      # state :provider_submitted # replaced by awaiting_applicant and applicant_entering_means
-      state :awaiting_applicant
-      state :applicant_entering_means
-      state :checking_citizen_answers
-      state :checking_passported_answers
       state :analysing_bank_transactions
-      state :provider_assessing_means
-      # state :provider_assessing_merits
-      state :provider_entering_merits
-      state :provider_checking_citizens_means_answers
-      state :provider_checked_citizens_means_answers
+      state :applicant_details_checked
+      state :applicant_entering_means
+      state :awaiting_applicant
+      state :checking_citizen_answers
+      state :checking_merits
       state :checking_merits_answers
+      state :checking_non_passported_means
+      state :checking_passported_answers
+      state :completed
+      state :delegated_functions_used
+      state :entering_applicant_details
       state :generating_reports
+      state :initiated, initial: true
+      state :provider_assessing_means
+      state :provider_confirming_applicant_eligibility
+      state :provider_entering_means
+      state :provider_entering_merits
       state :submitting_assessment
-      state :assessment_submitted
       state :use_ccms
 
       event :enter_applicant_details do
@@ -51,10 +45,6 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                               checking_applicant_details
                             ],
                     to: :entering_applicant_details
-        #
-        #
-        # transitions from: :initiated, to: :entering_applicant_details
-        # transitions from: :provider_entering_means, to: :entering_applicant_details
       end
 
       event :check_applicant_details do
@@ -64,8 +54,6 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                               use_ccms
                             ],
                     to: :checking_applicant_details
-        # transitions from: :entering_applicant_details, to: :checking_applicant_details
-        # transitions from: :applicant_details_checked, to: :checking_applicant_details
       end
 
       event :applicant_details_checked do
@@ -84,59 +72,44 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                               use_ccms
                             ],
                     to: :provider_entering_means
-        # transitions from: :applicant_details_checked, to: :provider_entering_means
-        # transitions from: :delegated_functions_used, to: :provider_entering_means
       end
 
       event :provider_used_delegated_functions do
-        transitions from: :applicant_details_checked, to: :delegated_functions_used
-        transitions from: :provider_submitted, to: :delegated_functions_used
-        transitions from: :delegated_functions_used, to: :delegated_functions_used
+        transitions from: %i[
+                              applicant_details_checked
+                              delegated_functions_used
+                             ],
+                    to: :delegated_functions_used
       end
 
       event :check_passported_answers do
-        transitions from: :provider_entering_means, to: :checking_passported_answers
-        transitions from: :delegated_functions_used, to: :checking_passported_answers
-        transitions from: :applicant_details_checked, to: :checking_passported_answers
-        # transitions from: :provider_assessing_means, to: :checking_passported_answers # replaced by the line below
-        # transitions from: :provider_assessing_merits, to: :checking_passported_answers
-      end
-
-      event :provider_submit do
-        transitions from: %i[
-                              provider_confirming_applicant_eligibility
-                              use_ccms
-                            ],
-                    to: :provider_submitted
-        # transitions from: :initiated, to: :provider_submitted
-        # transitions from: :entering_applicant_details, to: :provider_submitted # this will be removed eventually
-        # transitions from: :checking_applicant_details, to: :provider_submitted
-        # transitions from: :applicant_details_checked, to: :provider_submitted
-        # transitions from: :delegated_functions_used, to: :provider_submitted
+        transitions  from: %i[
+                                provider_entering_means
+                                delegated_functions_used
+                                delegated_functions_used
+                              ],
+                     to: :checking_passported_answers
       end
 
       event :use_ccms do
-        transitions from: :initiated, to: :use_ccms
-        transitions from: :applicant_details_checked, to: :use_ccms
-        transitions from: :provider_submitted, to: :use_ccms
-        transitions from: :delegated_functions_used, to: :use_ccms
-        transitions from: :provider_confirming_applicant_eligibility, to: :use_ccms
-        transitions from: :applicant_entering_means, to: :use_ccms
+        transitions  from: %i[
+                                initiated
+                                applicant_details_checked
+                                delegated_functions_used
+                                provider_confirming_applicant_eligibility
+                                applicant_entering_means
+                             ],
+                     to: :use_ccms
       end
 
       event :await_applicant do
-        transitions from: %i[
-                              provider_confirming_applicant_eligibility
-                              use_ccms
-                             ],
-                    to: :awaiting_applicant
+        transitions from: :provider_confirming_applicant_eligibility, to: :awaiting_applicant
       end
 
       event :applicant_enter_means do
         transitions from: %i[
                               awaiting_applicant
                               applicant_entering_means
-                              use_ccms
                             ],
                     to: :applicant_entering_means
       end
@@ -145,16 +118,10 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: :checking_applicant_details, to: :entering_applicant_details
         transitions from: :checking_citizen_answers, to: :applicant_entering_means
         transitions from: :checking_passported_answers, to: :applicant_details_checked
-        # transitions from: :checking_merits_answers, to: :provider_assessing_means # replaced by the line below
         transitions from: :checking_merits_answers, to: :provider_entering_merits
-        # transitions from: :provider_assessing_means, to: :checking_citizen_answers # replaced by the line below
-        # transitions from: :provider_assessing_merits, to: :checking_citizen_answers
       end
 
       event :check_citizen_answers do
-        # transitions from: :provider_submitted, to: :checking_citizen_answers
-        # transitions from: :provider_assessing_means, to: :checking_citizen_answers # replaced by the line below
-        # transitions from: :provider_assessing_merits, to: :checking_citizen_answers
         transitions from: :applicant_entering_means, to: :checking_citizen_answers
       end
 
@@ -164,26 +131,26 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                       ApplicantCompleteMeans.call(self)
                       BankTransactionsAnalyserJob.perform_later(self)
                     end
-        # transitions from: :checking_passported_answers, to: :provider_assessing_means # replaced by the line below
         transitions from: :checking_passported_answers, to: :provider_assessing_means
       end
 
       event :complete_bank_transaction_analysis do
-        # transitions from: :analysing_bank_transactions, to: :provider_assessing_means # replaced by the line below
         transitions from: :analysing_bank_transactions, to: :provider_assessing_means
       end
 
       event :provider_check_citizens_means_answers do
-        # transitions from: :provider_assessing_means, to: :provider_checking_citizens_means_answers # replaced by the line below
-        transitions from: :provider_assessing_means, to: :provider_checking_citizens_means_answers
-        transitions from: :provider_checked_citizens_means_answers, to: :provider_checking_citizens_means_answers
+        transitions from: %i[
+                              provider_assessing_means
+                              provider_checked_citizens_means_answers
+                            ],
+                    to: provider_checking_citizens_means_answers
       end
 
       event :provider_checked_citizens_means_answers do
         transitions from: :provider_checking_citizens_means_answers, to: :provider_checked_citizens_means_answers
       end
 
-      event :provider_confirm_applicant_eligiibility do
+      event :provider_confirm_applicant_eligibility do
         transitions from: %i[
                               applicant_details_checked
                               delegated_functions_used
@@ -192,13 +159,14 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       end
 
       event :check_merits_answers do
-        transitions from: :provider_checked_citizens_means_answers, to: :checking_merits_answers
-        transitions from: :checked_merits_answers, to: :checking_merits_answers
-        # transitions from: :provider_assessing_means, to: :checking_merits_answers # replaced by the line below
-        # transitions from: :provider_assessing_merits, to: :checking_merits_answers
-        transitions from: :provider_entering_merits, to: :checking_merits_answers
-        transitions from: :submitting_assessment, to: :checking_merits_answers
-        transitions from: :assessment_submitted, to: :checking_merits_answers
+        transitions from: %i[
+                              provider_checked_citizens_means_answers
+                              checked_merits_answers
+                              provider_entering_merits
+                              submitting_assessment
+                              assessment_submitted
+                            ],
+                  to: checking_merits_answers
       end
 
       event :generate_reports do
@@ -223,7 +191,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       event :reset_from_use_ccms do
         transitions from: :use_ccms, to: :applicant_details_checked
       end
-    end
   end
 end
+
 # rubocop:enable Layout/FirstArrayElementIndentation
