@@ -55,6 +55,10 @@ FactoryBot.define do
       state { 'provider_entering_merits' }
     end
 
+    trait :provider_entering_means do
+      state { 'provider_entering_means' }
+    end
+
     trait :with_irregular_income do
       after(:create) do |application|
         create(:irregular_income, legal_aid_application: application)

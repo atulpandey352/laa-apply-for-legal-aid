@@ -647,7 +647,7 @@ RSpec.describe LegalAidApplication, type: :model do
     it 'runs the complete means service and the bank transaction analyser' do
       expect(ApplicantCompleteMeans).to receive(:call).with(legal_aid_application)
       expect(BankTransactionsAnalyserJob).to receive(:perform_later).with(legal_aid_application)
-      legal_aid_application.complete_means!
+      legal_aid_application.complete_non_passported_means!
     end
   end
 

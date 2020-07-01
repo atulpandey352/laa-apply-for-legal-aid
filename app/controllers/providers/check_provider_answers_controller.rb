@@ -34,6 +34,7 @@ module Providers
     def status_change_not_required?
       legal_aid_application.checking_applicant_details? ||
         legal_aid_application.applicant_entering_means? ||
+        legal_aid_application.awaiting_applicant? ||
         legal_aid_application.checking_citizen_answers?
     end
   end

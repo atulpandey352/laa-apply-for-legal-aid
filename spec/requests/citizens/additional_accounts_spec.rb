@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'citizen additional accounts request test', type: :request do
-  let(:application) { create :application, :with_applicant, :awaiting_applicant }
+  let(:application) { create :application, :with_applicant, :applicant_entering_means }
   let(:application_id) { application.id }
   let(:secure_id) { application.generate_secure_id }
   let(:next_flow_step) { flow_forward_path }

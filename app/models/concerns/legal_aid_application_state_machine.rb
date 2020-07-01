@@ -19,18 +19,20 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       state :analysing_bank_transactions
       state :applicant_details_checked
       state :applicant_entering_means
+      state :assessment_submitted
       state :awaiting_applicant
+      state :checking_applicant_details
       state :checking_citizen_answers
-      state :checking_merits
       state :checking_merits_answers
       state :checking_non_passported_means
       state :checking_passported_answers
-      state :completed
       state :delegated_functions_used
       state :entering_applicant_details
       state :generating_reports
       state :initiated, initial: true
       state :provider_assessing_means
+      state :provider_checking_citizens_means_answers
+      state :provider_checked_citizens_means_answers
       state :provider_confirming_applicant_eligibility
       state :provider_entering_means
       state :provider_entering_merits
@@ -110,6 +112,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: %i[
                               awaiting_applicant
                               applicant_entering_means
+                              use_ccms
                             ],
                     to: :applicant_entering_means
       end
@@ -117,7 +120,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       event :reset do
         transitions from: :checking_applicant_details, to: :entering_applicant_details
         transitions from: :checking_citizen_answers, to: :applicant_entering_means
-        transitions from: :checking_passported_answers, to: :applicant_details_checked
+        transitions from: :checking_passported_answers, to: :provider_entering_means
         transitions from: :checking_merits_answers, to: :provider_entering_merits
       end
 
@@ -125,13 +128,16 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: :applicant_entering_means, to: :checking_citizen_answers
       end
 
-      event :complete_means do
+      event :complete_non_passported_means do
         transitions from: :checking_citizen_answers, to: :analysing_bank_transactions,
                     after: -> do
                       ApplicantCompleteMeans.call(self)
                       BankTransactionsAnalyserJob.perform_later(self)
                     end
-        transitions from: :checking_passported_answers, to: :provider_assessing_means
+      end
+
+      event :complete_passported_means do
+        transitions from: :checking_passported_answers, to: :provider_entering_merits
       end
 
       event :complete_bank_transaction_analysis do
@@ -143,7 +149,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                               provider_assessing_means
                               provider_checked_citizens_means_answers
                             ],
-                    to: provider_checking_citizens_means_answers
+                    to: :provider_checking_citizens_means_answers
       end
 
       event :provider_checked_citizens_means_answers do
@@ -166,7 +172,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
                               submitting_assessment
                               assessment_submitted
                             ],
-                  to: checking_merits_answers
+                    to: :checking_merits_answers
       end
 
       event :generate_reports do
@@ -191,7 +197,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       event :reset_from_use_ccms do
         transitions from: :use_ccms, to: :applicant_details_checked
       end
+    end
   end
 end
-
 # rubocop:enable Layout/FirstArrayElementIndentation
