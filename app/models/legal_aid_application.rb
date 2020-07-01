@@ -227,7 +227,7 @@ class LegalAidApplication < ApplicationRecord # rubocop:disable Metrics/ClassLen
       checking_citizen_answers? ||
       checking_passported_answers? ||
       checking_merits_answers? ||
-      provider_checking_citizens_means_answers?
+      checking_non_passported_means?
   end
 
   def opponents

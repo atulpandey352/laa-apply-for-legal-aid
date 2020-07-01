@@ -12,7 +12,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
     end
 
     def provider_checking_or_checked_citizens_means_answers?
-      provider_checking_citizens_means_answers? || provider_checked_citizens_means_answers?
+      checking_non_passported_means? || provider_checked_citizens_means_answers?
     end
 
     aasm column: :state do # rubocop:disable Metrics/BlockLength
@@ -144,16 +144,16 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
         transitions from: :analysing_bank_transactions, to: :provider_assessing_means
       end
 
-      event :provider_check_citizens_means_answers do
+      event :check_non_passported_means do
         transitions from: %i[
                               provider_assessing_means
                               provider_checked_citizens_means_answers
                             ],
-                    to: :provider_checking_citizens_means_answers
+                    to: :checking_non_passported_means
       end
 
       event :provider_checked_citizens_means_answers do
-        transitions from: :provider_checking_citizens_means_answers, to: :provider_checked_citizens_means_answers
+        transitions from: :checking_non_passported_means, to: :provider_checked_citizens_means_answers
       end
 
       event :provider_confirm_applicant_eligibility do

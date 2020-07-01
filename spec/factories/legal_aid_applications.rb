@@ -85,6 +85,10 @@ FactoryBot.define do
       state { :checking_applicant_details }
     end
 
+    trait :checking_non_passported_means do
+      state { 'checking_non_passported_means' }
+    end
+
     trait :with_proceeding_types do
       transient do
         proceeding_types_count { 1 }
