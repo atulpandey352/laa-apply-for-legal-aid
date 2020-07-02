@@ -12,7 +12,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
     end
 
     def provider_checking_or_checked_citizens_means_answers?
-      checking_non_passported_means? || provider_checked_citizens_means_answers?
+      checking_non_passported_means? || provider_entering_merits?
     end
 
     aasm column: :state do # rubocop:disable Metrics/BlockLength
@@ -32,7 +32,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       state :initiated, initial: true
       state :provider_assessing_means
       state :provider_checking_citizens_means_answers
-      state :provider_checked_citizens_means_answers
+      state :provider_entering_merits
       state :provider_confirming_applicant_eligibility
       state :provider_entering_means
       state :provider_entering_merits
@@ -147,13 +147,13 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       event :check_non_passported_means do
         transitions from: %i[
                               provider_assessing_means
-                              provider_checked_citizens_means_answers
+                              provider_entering_merits
                             ],
                     to: :checking_non_passported_means
       end
 
-      event :provider_checked_citizens_means_answers do
-        transitions from: :checking_non_passported_means, to: :provider_checked_citizens_means_answers
+      event :provider_enter_merits do
+        transitions from: :checking_non_passported_means, to: :provider_entering_merits
       end
 
       event :provider_confirm_applicant_eligibility do
@@ -166,7 +166,7 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
 
       event :check_merits_answers do
         transitions from: %i[
-                              provider_checked_citizens_means_answers
+                              provider_entering_merits
                               checked_merits_answers
                               provider_entering_merits
                               submitting_assessment
