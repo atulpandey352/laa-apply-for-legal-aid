@@ -32,11 +32,9 @@ en:
         analysing_bank_transactions: Analysing Bank Transactions
         provider_assessing_merits: Means test completed
         provider_entering_means: In progress
-        provider_entering_merits: In progress
         assessment_submitted: Application submitted
         provider_submitted: Submitted by provider
         provider_assessing_means: In progress
-        provider_checking_citizens_means_answers: Means test completed
         provider_entering_merits: Means test completed
         provider_confirming_applicant_eligibility: In progress
         generating_reports: Generating reports

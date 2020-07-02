@@ -31,8 +31,6 @@ module LegalAidApplicationStateMachine # rubocop:disable Metrics/ModuleLength La
       state :generating_reports
       state :initiated, initial: true
       state :provider_assessing_means
-      state :provider_checking_citizens_means_answers
-      state :provider_entering_merits
       state :provider_confirming_applicant_eligibility
       state :provider_entering_means
       state :provider_entering_merits
