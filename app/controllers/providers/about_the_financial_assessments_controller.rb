@@ -9,7 +9,7 @@ module Providers
     def update
       return continue_or_draft if draft_selected?
 
-      if ready_to_roll?
+      if ready_for_citizen_to_enter_financial_details?
         legal_aid_application.await_applicant!
         CitizenEmailService.new(legal_aid_application).send_email
         SubmitCitizenReminderService.new(legal_aid_application).send_email
@@ -19,7 +19,7 @@ module Providers
 
     private
 
-    def ready_to_roll?
+    def ready_for_citizen_to_enter_financial_details?
       !legal_aid_application.awaiting_applicant? && !legal_aid_application.applicant_entering_means?
     end
 

@@ -345,30 +345,12 @@ FactoryBot.define do
       state { :applicant_details_checked }
       provider_step { :check_benefits }
     end
-    #
-    # trait :at_provider_submitted do
-    #   with_proceeding_types
-    #   state { :provider_submitted }
-    #   provider_step { :check_provider_answers }
-    # end
-
-    # trait :at_provider_assessing_merits do
-    #   with_proceeding_types
-    #   state { :provider_assessing_merits }
-    #   provider_step { :start_merits_assessments }
-    # end
 
     trait :at_client_completed_means do
       with_proceeding_types
       state { :provider_assessing_means }
       provider_step { :client_completed_means }
     end
-
-    # trait :at_income_summary do
-    #   with_proceeding_types
-    #   state { :provider_assessing_merits }
-    #   provider_step { :income_summary }
-    # end
 
     trait :at_checking_merits_answers do
       with_proceeding_types

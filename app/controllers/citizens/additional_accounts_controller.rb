@@ -36,7 +36,6 @@ module Citizens
     private
 
     def online_accounts_update
-      # legal_aid_application.provider_submit! unless legal_aid_application.provider_submitted?
       legal_aid_application.update(has_offline_accounts: false)
     end
 
