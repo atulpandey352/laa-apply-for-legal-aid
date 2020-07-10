@@ -18,7 +18,5 @@ RSpec.describe Admin::RolesController, type: :request do
       subject
       expect(response.body).to include('Search for the Provider firm name')
     end
-
-
   end
 end
