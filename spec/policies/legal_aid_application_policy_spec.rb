@@ -45,10 +45,10 @@ RSpec.describe LegalAidApplicationPolicy do
     end
 
     context 'application is passported' do
-      let(:legal_aid_application) { create(:legal_aid_application, :with_positive_benefit_check_result) }
-      context 'provider has passported rights' do
-        before { provider.permissions << passported_permission }
+      let(:legal_aid_application) { create(:legal_aid_application, :with_positive_benefit_check_result, provider: provider) }
 
+      context 'provider has passported rights' do
+        let(:provider)  { create :provider, :with_passported_permissions }
         it 'permits all actions' do
           controller_actions.each do |action|
             expect(subject).to permit(action)
@@ -57,6 +57,7 @@ RSpec.describe LegalAidApplicationPolicy do
       end
 
       context 'provider does not have passported rights' do
+        let(:provider)  { create :provider, :with_non_passported_permissions }
         it 'does not permit any actions' do
           controller_actions.each do |action|
             expect(subject).not_to permit(action)
@@ -66,9 +67,9 @@ RSpec.describe LegalAidApplicationPolicy do
     end
 
     context 'application is non-passported' do
-      let(:legal_aid_application) { create(:legal_aid_application, :with_negative_benefit_check_result) }
+      let(:legal_aid_application) { create(:legal_aid_application, :with_negative_benefit_check_result, provider: provider) }
       context 'provider has non-passported rights' do
-        before { provider.permissions << non_passported_permission }
+        let(:provider) { create :provider, :with_non_passported_permissions }
 
         it 'permits all actions' do
           controller_actions.each do |action|
@@ -78,6 +79,7 @@ RSpec.describe LegalAidApplicationPolicy do
       end
 
       context 'provider does not have non-passported rights' do
+        let(:provider) { create :provider, :with_passported_permissions }
         it 'does not permit any actions' do
           controller_actions.each do |action|
             expect(subject).not_to permit(action)

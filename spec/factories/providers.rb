@@ -37,7 +37,7 @@ FactoryBot.define do
     trait :with_non_passported_permissions do
       permissions do
         non_passported = Permission.find_by(role: 'application.non_passported.*')
-        non_passported = create(:permission, :passported) if non_passported.nil?
+        non_passported = create(:permission, :non_passported) if non_passported.nil?
         [non_passported]
       end
     end
